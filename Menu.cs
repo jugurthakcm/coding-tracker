@@ -1,7 +1,4 @@
-﻿
-
-
-namespace coding_tracker
+﻿namespace coding_tracker
 {
     public class Menu
     {
@@ -18,6 +15,7 @@ namespace coding_tracker
                 Console.WriteLine("Type 2 to Insert Record.");
                 Console.WriteLine("Type 3 to Delete Record.");
                 Console.WriteLine("Type 4 to Update Record.");
+                Console.WriteLine("Type 5 to Use the Stopwatch.");
                 Console.WriteLine("------------------------------------------\n");
 
                 string? command = Console.ReadLine();
@@ -40,6 +38,10 @@ namespace coding_tracker
                         break;
                     case "4":
                         Controller.Update();
+                        break;
+
+                    case "5":
+                        Controller.StopWatch();
                         break;
                     default:
                         Console.WriteLine("\nInvalid Command. Please type a number from 0 to 4.\n");

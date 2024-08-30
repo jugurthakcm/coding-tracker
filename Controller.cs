@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Diagnostics;
+using Dapper;
 using Microsoft.Data.Sqlite;
 using Spectre.Console;
 
@@ -83,7 +84,7 @@ namespace coding_tracker
             GetAllRecords();
 
             Console.Write("\n\nInsert the ID of the coding session that you want to delete: ");
-            string idToDelete = Console.ReadLine();
+            string? idToDelete = Console.ReadLine();
 
             using (var connection = new SqliteConnection(Variables.defaultConnection))
             {
@@ -109,12 +110,11 @@ namespace coding_tracker
             GetAllRecords();
 
             Console.Write("\n\nInsert the ID of the coding session that you want to update: ");
-            string idToUpdate = Console.ReadLine();
+            string? idToUpdate = Console.ReadLine();
 
             using (var connection = new SqliteConnection(Variables.defaultConnection))
             {
                 string sql = $"SELECT * FROM coding_tracker WHERE Id={idToUpdate}";
-
 
                 var session = connection.QuerySingleOrDefault(sql);
 
@@ -128,8 +128,6 @@ namespace coding_tracker
 
                     Update();
                 }
-
-
 
                 CodingSession codingSession = Utils.GetDateTimeFromUser();
 
@@ -148,6 +146,88 @@ namespace coding_tracker
             Console.ReadLine();
 
             Console.Clear();
+        }
+
+        // Track coding session using a stopwatch
+        public static void StopWatch()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            bool running = true;
+
+            while (running)
+            {
+                Console.Clear();
+                Console.WriteLine(
+                    "Press 'S' to Start/Stop, 'R' to Reset, 'E' to Exit and Save Record."
+                );
+                AnsiConsole.MarkupLine(
+                    $"Elapsed Time: [green]{stopwatch.Elapsed:hh\\:mm\\:ss\\.fff}[/]"
+                );
+
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKey key = Console.ReadKey(true).Key;
+
+                    switch (key)
+                    {
+                        // Start and stop the stopwatch
+                        case ConsoleKey.S:
+                            if (stopwatch.IsRunning)
+                            {
+                                stopwatch.Stop();
+                                Console.WriteLine("Stopwatch stopped.");
+                            }
+                            else
+                            {
+                                stopwatch.Start();
+                                Console.WriteLine("Stopwatch started.");
+                            }
+                            break;
+
+                        // Reset the stopwatch
+                        case ConsoleKey.R:
+                            stopwatch.Reset();
+                            Console.WriteLine("Stopwatch reset.");
+                            break;
+
+                        // Exit the stopwatch and save record
+                        case ConsoleKey.E:
+                            running = false;
+
+                            // Get today's date in format of MM/dd/yyyy
+                            string todayDate = DateTime.Now.ToString("MM/dd/yyyy");
+
+                            // Format the elapsed time (hh:mm:ss) to add it to the DB
+                            TimeSpan elapsed = stopwatch.Elapsed;
+                            string formattedElapsed = string.Format(
+                                "{0:D2}:{1:D2}:{2:D2}",
+                                elapsed.Hours,
+                                elapsed.Minutes,
+                                elapsed.Seconds
+                            );
+
+                            // Save to DB
+                            using (
+                                var connection = new SqliteConnection(Variables.defaultConnection)
+                            )
+                            {
+                                string sql =
+                                    @$"INSERT INTO coding_tracker(StartTime, EndTime, Duration) 
+                                    VALUES('{todayDate}','{todayDate}','{formattedElapsed}')";
+
+                                connection.Execute(sql);
+
+                                connection.Close();
+                            }
+
+                            Console.WriteLine("Exiting and saving record...");
+                            break;
+                    }
+                }
+
+                // Delay to reduce CPU usage
+                Thread.Sleep(100);
+            }
         }
     }
 }
