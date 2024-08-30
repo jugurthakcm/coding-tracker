@@ -26,6 +26,7 @@ namespace coding_tracker
                     return;
                 }
 
+                // Table displaying all records
                 var table = new Table();
 
                 table.AddColumn("[yellow]ID[/]");
@@ -44,6 +45,25 @@ namespace coding_tracker
                 }
 
                 AnsiConsole.Write(table);
+
+                // Declaration of the total and average coding session per period
+                TimeSpan? totalTimeSpentCoding = TimeSpan.Zero;
+
+                // Calculate the total time spent in coding
+                foreach (var session in sessions)
+                {
+                    if (TimeSpan.TryParse(session.Duration, out TimeSpan parsedDuration))
+                        totalTimeSpentCoding += parsedDuration;
+                }
+
+                TimeSpan? averageTimeSpentCoding = totalTimeSpentCoding / sessions.Count();
+
+                // Display total and average times
+                Console.WriteLine("");
+                AnsiConsole.MarkupLine($"[bold]Total time spent coding:[/] {totalTimeSpentCoding}");
+                AnsiConsole.MarkupLine(
+                    $"[bold]Average time spent coding:[/] {averageTimeSpentCoding}"
+                );
 
                 connection.Close();
             }
