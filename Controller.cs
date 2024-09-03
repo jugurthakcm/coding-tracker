@@ -174,6 +174,10 @@ namespace coding_tracker
             Stopwatch stopwatch = new Stopwatch();
             bool running = true;
 
+            bool firstStart = true;
+
+            string startDateTime = "";
+
             while (running)
             {
                 Console.Clear();
@@ -201,6 +205,12 @@ namespace coding_tracker
                             {
                                 stopwatch.Start();
                                 Console.WriteLine("Stopwatch started.");
+
+                                if (firstStart)
+                                {
+                                    startDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                                    firstStart = false;
+                                }
                             }
                             break;
 
@@ -208,14 +218,18 @@ namespace coding_tracker
                         case ConsoleKey.R:
                             stopwatch.Reset();
                             Console.WriteLine("Stopwatch reset.");
+                            startDateTime = "";
+                            firstStart = true;
+
                             break;
 
                         // Exit the stopwatch and save record
                         case ConsoleKey.E:
                             running = false;
+                            firstStart = true;
 
                             // Get today's date in format of MM/dd/yyyy
-                            string todayDate = DateTime.Now.ToString("MM/dd/yyyy");
+                            string endDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
 
                             // Format the elapsed time (hh:mm:ss) to add it to the DB
                             TimeSpan elapsed = stopwatch.Elapsed;
@@ -233,7 +247,7 @@ namespace coding_tracker
                             {
                                 string sql =
                                     @$"INSERT INTO coding_tracker(StartTime, EndTime, Duration) 
-                                    VALUES('{todayDate}','{todayDate}','{formattedElapsed}')";
+                                    VALUES('{startDateTime}','{endDateTime}','{formattedElapsed}')";
 
                                 connection.Execute(sql);
 
