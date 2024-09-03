@@ -70,11 +70,11 @@ namespace coding_tracker
         }
 
         // Insert a tracking session
-        public static void Insert()
+        public static async Task Insert()
         {
             Console.Clear();
 
-            CodingSession codingSession = Utils.GetDateTimeFromUser();
+            CodingSession codingSession = await Utils.GetDateTimeFromUser();
 
             // INSERT INTO DB
             using (var connection = new SqliteConnection(Variables.defaultConnection))
@@ -123,7 +123,7 @@ namespace coding_tracker
         }
 
         // Update a tracking session
-        public static void Update()
+        public static async Task Update()
         {
             Console.Clear();
 
@@ -149,7 +149,7 @@ namespace coding_tracker
                     Update();
                 }
 
-                CodingSession codingSession = Utils.GetDateTimeFromUser();
+                CodingSession codingSession = await Utils.GetDateTimeFromUser();
 
                 sql =
                     @$"UPDATE coding_tracker SET StartTime ='{codingSession.StartDateTime}', 

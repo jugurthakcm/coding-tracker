@@ -2,7 +2,7 @@
 {
     public class Menu
     {
-        public static void ShowMenu()
+        public static async Task ShowMenu()
         {
             Console.Clear();
             bool closeApp = false;
@@ -31,7 +31,7 @@
                         Controller.GetAllRecords();
                         break;
                     case "2":
-                        Controller.Insert();
+                       await Controller.Insert();
                         break;
                     case "3":
                         Controller.Delete();

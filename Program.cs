@@ -1,11 +1,9 @@
-﻿using System.Configuration;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
+using System.Configuration;
+using System.Threading.Tasks;
+using coding_tracker;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using coding_tracker;
-
-
-
 
 using (var connection = new SqliteConnection(Variables.defaultConnection))
 {
@@ -18,7 +16,6 @@ using (var connection = new SqliteConnection(Variables.defaultConnection))
                         )";
 
     connection.Execute(sql);
-
 }
 
-Menu.ShowMenu();
+await Menu.ShowMenu();

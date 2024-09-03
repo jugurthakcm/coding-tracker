@@ -1,36 +1,38 @@
-﻿using Spectre.Console;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace coding_tracker
 {
     public static class Utils
     {
-
-        public static CodingSession GetDateTimeFromUser()
+        public static async Task<CodingSession> GetDateTimeFromUser()
         {
-
             // INSERT START TIME
-            Console.WriteLine("\nInsert the time when you started coding MM/dd/yyyy hh:mm (AM/PM): ");
+            Console.WriteLine(
+                "\nInsert the time when you started coding MM/dd/yyyy hh:mm (AM/PM): "
+            );
 
-            string startDateTimeString = Console.ReadLine();
+         
+            string recognizedText = await Speech.HandleSpeech();
+            string startDateTimeString = recognizedText.Replace(",", "").Replace(".", "");
 
-            DateTime startDateTime = Validation.StringToDateTime(startDateTimeString);
+            DateTime startDateTime = await Validation.StringToDateTime(startDateTimeString);
 
             // INSERT END TIME
-            Console.WriteLine("\nInsert the time when you finished coding MM/dd/yyyy hh:mm (AM/PM): ");
+            Console.WriteLine(
+                "\nInsert the time when you finished coding MM/dd/yyyy hh:mm (AM/PM): "
+            );
 
-            string endDateTimeString = Console.ReadLine();
+             recognizedText = await Speech.HandleSpeech();
+            string endDateTimeString = recognizedText.Replace(",", "").Replace(".", "");
 
-            DateTime endDateTime = Validation.StringToDateTime(endDateTimeString);
-
+            DateTime endDateTime = await Validation.StringToDateTime(endDateTimeString);
 
             return new CodingSession(startDateTime, endDateTime);
-
-
         }
     }
 }
