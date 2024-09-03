@@ -146,7 +146,7 @@ namespace coding_tracker
 
                     Console.ReadLine();
 
-                    Update();
+                    await Update();
                 }
 
                 CodingSession codingSession = await Utils.GetDateTimeFromUser();

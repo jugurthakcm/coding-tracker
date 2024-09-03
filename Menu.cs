@@ -37,7 +37,7 @@
                         Controller.Delete();
                         break;
                     case "4":
-                        Controller.Update();
+                        await Controller.Update();
                         break;
 
                     case "5":
