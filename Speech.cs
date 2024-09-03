@@ -5,8 +5,8 @@ using Microsoft.CognitiveServices.Speech.Audio;
 class Speech
 {
     // ENV Speech keys
-    public static string speechKey = ConfigurationManager.AppSettings.Get("SPEECH_SERVICE_KEY");
-    public static string speechRegion = ConfigurationManager.AppSettings.Get(
+    public static string? speechKey = ConfigurationManager.AppSettings.Get("SPEECH_SERVICE_KEY");
+    public static string? speechRegion = ConfigurationManager.AppSettings.Get(
         "SPEECH_SERVICE_REGION"
     );
 
